@@ -114,8 +114,7 @@ elif [[ "$platform" -eq 'linux' ]]; then
 fi
 
 echo "
-You're good to go!
-Close any active terminal windows and re-open to ensure everything is properly sourced.
-
-If you do not wish to close terminal, you may try to type 'source ~/.profile' to enable it for this session.
+You're good to go!\n
+Close any active terminal windows and re-open to ensure everything is properly sourced.\n
+If you do not wish to close terminal, you may try to type \'source ~/.profile\' to enable it for this session.
 "
