@@ -1,4 +1,4 @@
-Railo Express Development Environment
+Railo Express Dev Environment
 =====================
 This is a dead simple RAILO EXPRESS CFML DEVELOPMENT ENVIRONMENT for Mac OS X / Linux.
 Support for Windows may come soon but may be in a separate repository.
