@@ -1,7 +1,6 @@
 railoenv
 =====================
-This is a dead simple RAILO EXPRESS CFML DEVELOPMENT ENVIRONMENT for Mac OS X / Linux.
-Support for Windows may come soon but may be in a separate repository.
+Create a CFML dev environment with Railo in a flash!
 
 ### Installation
 
@@ -25,3 +24,6 @@ http://www.markdrew.co.uk/blog/post.cfm/running-railo-from-any-directory
 - `railoenv` CLI
 - `railoenv new` command for creating a railo context in a directory
 - `railoenv server` command for starting the local railo context with possible port options.
+- Move railo express server files into a `versions` directory and keep tabs on which versions are installed.
+- Add Linux support to the installer... shouldn't be that hard really just haven't had time.
+- Add Windows support... may have to go in separate repo?  Who knows...
