@@ -5,7 +5,7 @@ Create a CFML dev environment with Railo in a flash!
 ### Installation
 
 - Open your Terminal.
-- Copy/Paste `\curl -L https://raw.github.com/joshuairl/railoenv/master/binscripts/installer | bash`
+- Copy/Paste `bash <(curl -s https://raw.github.com/joshuairl/railoenv/master/binscripts/installer)`
 
 ### Features
 Enables the ability to initialize a Railo context from any directory by doing the following:
