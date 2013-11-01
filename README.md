@@ -22,6 +22,6 @@ http://www.markdrew.co.uk/blog/post.cfm/running-railo-from-any-directory
 ### ToDo
 
 - Allow for version selection and local / global railo versions a la rbenv / nodenv.
-- Create CLI for `railoenv`
-    `new` command for creating a railo context in a directory
-    `server` command for starting the local railo context with possible port options.
+- `railoenv` CLI
+- `railoenv new` command for creating a railo context in a directory
+- `railoenv server` command for starting the local railo context with possible port options.
