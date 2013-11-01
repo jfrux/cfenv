@@ -1,4 +1,4 @@
-Railo Express Dev Environment
+railoenv
 =====================
 This is a dead simple RAILO EXPRESS CFML DEVELOPMENT ENVIRONMENT for Mac OS X / Linux.
 Support for Windows may come soon but may be in a separate repository.
@@ -19,3 +19,9 @@ $> railo_init
 For more information about this technique, you can see an article by Mark Drew regarding his "railo_runner" technique that him and I thought up.
 http://www.markdrew.co.uk/blog/post.cfm/running-railo-from-any-directory
 
+### ToDo
+
+- Allow for version selection and local / global railo versions a la rbenv / nodenv.
+- Create CLI for `railoenv`
+    `new` command for creating a railo context in a directory
+    `server` command for starting the local railo context with possible port options.
