@@ -65,7 +65,7 @@ if [[ $platform == 'osx' ]]; then
     echo
     echo "--> Grabbing Latest Railo Express for Mac and arranging things. Be patient this may take a while."
 
-    git clone https://github.com/joshuairl/railo_express_for_mac.git /opt/railo
+    git clone https://github.com/joshuairl/railoenv.git /opt/railo
   fi
 
   echo "
