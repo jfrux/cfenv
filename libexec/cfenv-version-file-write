@@ -1,0 +1,19 @@
+#!/usr/bin/env bash
+# Usage: cfenv version-file-write <file> <version>
+
+set -e
+[ -n "$CFENV_DEBUG" ] && set -x
+
+CFENV_VERSION_FILE="$1"
+CFENV_VERSION="$2"
+
+if [ -z "$CFENV_VERSION" ] || [ -z "$CFENV_VERSION_FILE" ]; then
+  cfenv-help --usage version-file-write >&2
+  exit 1
+fi
+
+# Make sure the specified version is installed.
+cfenv-prefix "$CFENV_VERSION" >/dev/null
+
+# Write the version out to disk.
+echo "$CFENV_VERSION" > "$CFENV_VERSION_FILE"

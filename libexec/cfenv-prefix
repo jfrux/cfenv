@@ -1,0 +1,41 @@
+#!/usr/bin/env bash
+# Summary: Display prefix for a CFML version
+# Usage: cfenv prefix [<version>]
+#
+# Displays the directory where a CFML version is installed. If no
+# version is given, `cfenv prefix' displays the location of the
+# currently selected version.
+
+set -e
+[ -n "$CFENV_DEBUG" ] && set -x
+
+# Provide cfenv completions
+if [ "$1" = "--complete" ]; then
+  echo system
+  exec cfenv-versions --bare
+fi
+
+if [ -n "$1" ]; then
+  export CFENV_VERSION="$1"
+elif [ -z "$CFENV_VERSION" ]; then
+  CFENV_VERSION="$(cfenv-version-name)"
+fi
+
+if [ "$CFENV_VERSION" = "system" ]; then
+  if RAILO_PATH="$(cfenv-which railo 2>/dev/null)"; then
+    RAILO_PATH="${RAILO_PATH%/*}"
+    echo "${RAILO_PATH%/bin}"
+    exit
+  else
+    echo "cfenv: system version not found in PATH" >&2
+    exit 1
+  fi
+fi
+
+CFENV_PREFIX_PATH="${CFENV_ROOT}/versions/${CFENV_VERSION}"
+if [ ! -d "$CFENV_PREFIX_PATH" ]; then
+  echo "cfenv: version \`${CFENV_VERSION}' not installed" >&2
+  exit 1
+fi
+
+echo "$CFENV_PREFIX_PATH"

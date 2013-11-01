@@ -1,0 +1,88 @@
+#!/usr/bin/env bash
+#
+# Summary: Display the full path to an executable
+#
+# Usage: cfenv which <command>
+#
+# Displays the full path to the executable that cfenv will invoke when
+# you run the given command.
+
+set -e
+[ -n "$CFENV_DEBUG" ] && set -x
+
+# Provide cfenv completions
+if [ "$1" = "--complete" ]; then
+  exec cfenv shims --short
+fi
+
+expand_path() {
+  if [ ! -d "$1" ]; then
+    return 1
+  fi
+
+  local cwd="$(pwd)"
+  cd "$1"
+  pwd
+  cd "$cwd"
+}
+
+remove_from_path() {
+  local path_to_remove="$(expand_path "$1")"
+  local result=""
+
+  if [ -z "$path_to_remove" ]; then
+    echo "${PATH}"
+    return
+  fi
+
+  local paths
+  IFS=: paths=($PATH)
+
+  for path in "${paths[@]}"; do
+    path="$(expand_path "$path" || true)"
+    if [ -n "$path" ] && [ "$path" != "$path_to_remove" ]; then
+      result="${result}${path}:"
+    fi
+  done
+
+  echo "${result%:}"
+}
+
+CFENV_VERSION="$(cfenv-version-name)"
+CFENV_COMMAND="$1"
+
+if [ -z "$CFENV_COMMAND" ]; then
+  cfenv-help --usage which >&2
+  exit 1
+fi
+
+if [ "$CFENV_VERSION" = "system" ]; then
+  PATH="$(remove_from_path "${CFENV_ROOT}/shims")"
+  CFENV_COMMAND_PATH="$(command -v "$CFENV_COMMAND" || true)"
+else
+  CFENV_COMMAND_PATH="${CFENV_ROOT}/versions/${CFENV_VERSION}/bin/${CFENV_COMMAND}"
+fi
+
+OLDIFS="$IFS"
+IFS=$'\n' scripts=(`cfenv-hooks which`)
+IFS="$OLDIFS"
+for script in "${scripts[@]}"; do
+  source "$script"
+done
+
+if [ -x "$CFENV_COMMAND_PATH" ]; then
+  echo "$CFENV_COMMAND_PATH"
+else
+  echo "cfenv: $CFENV_COMMAND: command not found" >&2
+
+  versions="$(cfenv-whence "$CFENV_COMMAND" || true)"
+  if [ -n "$versions" ]; then
+    { echo
+      echo "The \`$1' command exists in these CFML versions:"
+      echo "$versions" | sed 's/^/  /g'
+      echo
+    } >&2
+  fi
+
+  exit 127
+fi

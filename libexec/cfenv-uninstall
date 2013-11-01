@@ -1,0 +1,60 @@
+#!/usr/bin/env bash
+#
+# Summary: Uninstall a specific Railo version
+#
+# Usage: cfenv uninstall [-f|--force] <version>
+#
+#    -f  Attempt to remove the specified version without prompting
+#        for confirmation. If the version does not exist, do not
+#        display an error message.
+#
+# See `cfenv versions` for a complete list of installed versions.
+#
+set -e
+
+# Provide cfenv completions
+if [ "$1" = "--complete" ]; then
+  exec cfenv versions --bare
+fi
+
+if [ -z "$CFENV_ROOT" ]; then
+  CFENV_ROOT="${HOME}/.cfenv"
+fi
+
+unset FORCE
+if [ "$1" = "-f" ] || [ "$1" = "--force" ]; then
+  FORCE=true
+  shift
+fi
+
+DEFINITION="$1"
+case "$DEFINITION" in
+"" | -* )
+  # We can remove the sed fallback once cfenv 0.4.0 is widely available.
+  { cfenv-help uninstall 2>/dev/null ||
+    sed -ne '/^#/!q;s/.\{1,2\}//;1,4d;p' < "$0"
+  } >&2
+  exit 1
+  ;;
+esac
+
+VERSION_NAME="${DEFINITION##*/}"
+PREFIX="${CFENV_ROOT}/versions/${VERSION_NAME}"
+
+if [ -z "$FORCE" ]; then
+  if [ ! -d "$PREFIX" ]; then
+    echo "cfenv: version \`$VERSION_NAME' not installed" >&2
+    exit 1
+  fi
+
+  read -p "cfenv: remove $PREFIX? "
+  case "$REPLY" in
+  y* | Y* ) ;;
+  * ) exit 1 ;;
+  esac
+fi
+
+if [ -d "$PREFIX" ]; then
+  rm -rf "$PREFIX"
+  cfenv rehash
+fi
