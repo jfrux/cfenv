@@ -88,7 +88,7 @@ detected.
   -->
 
   <!-- Add context specific logger-->
-  <Set name="handler">
+  <!-- <Set name="handler">
     <New id="RequestLog" class="org.eclipse.jetty.server.handler.RequestLogHandler">
       <Set name="requestLog">
       <New id="RequestLogImpl" class="org.eclipse.jetty.server.NCSARequestLog">
@@ -99,7 +99,7 @@ detected.
       </New>
       </Set>
     </New>
-  </Set>
+  </Set> -->
   
   
 
