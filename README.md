@@ -3,7 +3,13 @@ Railo Express Dev Environment
 This is a dead simple RAILO EXPRESS CFML DEVELOPMENT ENVIRONMENT for Mac OS X / Linux.
 Support for Windows may come soon but may be in a separate repository.
 
-It also enables the ability to initialize a Railo context from any directory by doing the following:
+### Installation
+
+- Open your Terminal.
+- Copy/Paste `\curl -L https://raw.github.com/joshuairl/railoenv/master/binscripts/installer | bash`
+
+### Features
+Enables the ability to initialize a Railo context from any directory by doing the following:
 ```
 $> mkdir -p ~/Projects/my_new_cfml_project
 $> cd ~/Projects/my_new_cfml_project
