@@ -29,7 +29,21 @@
     Default web.xml file.  
     This file is applied to a Web application before it's own WEB_INF/web.xml file
   </description>
+<filter>
+    <filter-name>UrlRewriteFilter</filter-name>
+    <filter-class>org.tuckey.web.filters.urlrewrite.UrlRewriteFilter</filter-class>
 
+    <init-param>
+        <param-name>confPath</param-name>
+        <param-value>/urlrewrite.xml</param-value>
+    </init-param>
+</filter>
+<filter-mapping>
+    <filter-name>UrlRewriteFilter</filter-name>
+    <url-pattern>/*</url-pattern>
+    <dispatcher>REQUEST</dispatcher>
+    <dispatcher>FORWARD</dispatcher>
+</filter-mapping>
   <!-- ==================================================================== -->
   <!-- Removes static references to beans from javax.el.BeanELResolver to   -->
   <!-- ensure webapp classloader can be released on undeploy                -->
@@ -112,7 +126,7 @@
  *                    header.
  -->
  
- 
+  
   <!-- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -  -->
   <servlet>
     <servlet-name>default</servlet-name>
@@ -177,9 +191,6 @@
     <url-pattern>/</url-pattern>
   </servlet-mapping>
 
-
-  
-    
   <!-- ********************************************************************* -->
   <!-- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -->
   <!-- Railo Servlet Definitions (Servlet Spec. Version 2.5 or greater req.) -->
@@ -199,7 +210,7 @@
     <!-- write permissions to that folder.  leave commented for defaults.    -->
     <!--
     <init-param>
-      <param-name>railo-server-directory</param-name>
+      <param-name>railo-server-root</param-name>
       <param-value>/var/Railo/config/server/</param-value>
       <description>Railo Server configuration directory (for Server-wide configurations, settings, and libraries)</description>
     </init-param>
@@ -217,7 +228,7 @@
       <description>Railo Web Directory (for Website-specific configurations, settings, and libraries)</description>
     </init-param>
     !-->
-    <load-on-startup>1</load-on-startup>
+    <load-on-startup>2</load-on-startup>
   </servlet>
   
   <servlet-mapping>
@@ -227,6 +238,7 @@
     <url-pattern>*.cfml</url-pattern>   
     <url-pattern>/index.cfc/*</url-pattern>
     <url-pattern>/index.cfm/*</url-pattern>
+    <url-pattern>/rewrite.cfm/*</url-pattern> <!-- added for cfwheels -->
     <url-pattern>/index.cfml/*</url-pattern>
     
     <!-- url-pattern>*.cfm/*</url-pattern !-->
@@ -244,7 +256,7 @@
     <description>Railo Servlet for RESTful services</description>
     <servlet-name>RESTServlet</servlet-name>    
     <servlet-class>railo.loader.servlet.RestServlet</servlet-class>
-    <load-on-startup>2</load-on-startup>
+    <load-on-startup>3</load-on-startup>
   </servlet>  
 
   <servlet-mapping>
@@ -437,6 +449,7 @@
     <url-pattern>/servlet/*</url-pattern> </servlet-mapping>
   -->
 
+  
 
 
   <!-- ==================================================================== -->

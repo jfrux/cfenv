@@ -28,7 +28,7 @@ detected.
   <!--  + war OR resourceBase                                          -->
   <!-- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -->
   <Set name="contextPath">/</Set>
-  <Set name="resourceBase"><SystemProperty name="jetty.home" default="."/>/webapps/www/</Set>
+  <Set name="resourceBase"><SystemProperty name="respath" default="."/></Set>
   
   <!-- <Set name="war"><SystemProperty name="jetty.home" default="."/>/webapps/test.war</Set> -->
 
@@ -63,8 +63,8 @@ detected.
   <Get name="securityHandler">
     <Set name="loginService">
       <New class="org.eclipse.jetty.security.HashLoginService">
-	    <Set name="name">Test Realm</Set>
-	    <Set name="config"><SystemProperty name="jetty.home" default="."/>/etc/realm.properties</Set> -->
+      <Set name="name">Test Realm</Set>
+      <Set name="config"><SystemProperty name="jetty.home" default="."/>/etc/realm.properties</Set> -->
             <!-- To enable reload of realm when properties change, uncomment the following lines -->
             <!-- changing refreshInterval (in seconds) as desired                                -->
             <!-- 
@@ -87,20 +87,24 @@ detected.
   </Get>
   -->
 
-  <!-- Add context specific logger
+  <!-- Add context specific logger-->
   <Set name="handler">
     <New id="RequestLog" class="org.eclipse.jetty.server.handler.RequestLogHandler">
       <Set name="requestLog">
-	<New id="RequestLogImpl" class="org.eclipse.jetty.server.NCSARequestLog">
-	  <Set name="filename"><Property name="jetty.logs" default="./logs"/>/test-yyyy_mm_dd.request.log</Set>
-	  <Set name="filenameDateFormat">yyyy_MM_dd</Set>
-	  <Set name="append">true</Set>
-	  <Set name="LogTimeZone">GMT</Set>
-	</New>
+      <New id="RequestLogImpl" class="org.eclipse.jetty.server.NCSARequestLog">
+        <Set name="filename"><Property name="jetty.logs" default="./logs"/>/test-yyyy_mm_dd.request.log</Set>
+        <Set name="filenameDateFormat">yyyy_MM_dd</Set>
+        <Set name="append">true</Set>
+        <Set name="LogTimeZone">GMT</Set>
+      </New>
       </Set>
     </New>
   </Set>
-  -->
+  
+  
+
+   <!-- add the rewrite handler to the server 
+  <Set name="handler"><Ref id="Rewrite" /></Set>-->
 
 </Configure>
 

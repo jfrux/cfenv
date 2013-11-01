@@ -1,0 +1,4 @@
+#!/bin/bash
+CURRPATH=$(pwd)
+cd $(dirname $0)
+java -DSTOP.PORT=8887 -DDEBUG -DSTOP.KEY=railo -jar -Xms256M  -Xmx512M start.jar -Drespath=$CURRPATH
