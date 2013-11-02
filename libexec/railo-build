@@ -424,7 +424,7 @@ build_package_copy() {
 build_package_mods() {
   local package_name="$1"
   echo "Configuring Railo Run CLI..."
-  cp -fR "${RAILO_BUILD_ROOT}/share/railo-runner/${package_name}/" "$PREFIX_PATH"
+  cp -fR "${RAILO_BUILD_ROOT}/share/railo-runner/${platform}/${package_name}/" "$PREFIX_PATH"
 }
 
 before_install_package() {

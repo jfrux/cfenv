@@ -47,20 +47,6 @@ set -e
 
 opt=""
 program="\${0##*/}"
-if [ "\$program" = "railo" ]; then
-  for arg; do
-    case "\$arg" in
-    -S* ) opt=--railopath ;;
-    -e* | -- ) break ;;
-    */* )
-      if [ -f "\$arg" ]; then
-        export CFENV_DIR="\${arg%/*}"
-        break
-      fi
-      ;;
-    esac
-  done
-fi
 
 export CFENV_ROOT="$CFENV_ROOT"
 exec "$(command -v cfenv)" exec \$opt "\$program" "\$@"
