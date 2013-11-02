@@ -416,12 +416,15 @@ build_package_standard() {
 
 
 build_package_copy() {
+  echo "Copying files to ~/.cfenv..."
   mkdir -p "$PREFIX_PATH"
   cp -fR . "$PREFIX_PATH"
 }
 
 build_package_mods() {
-  cp -fR "${RAILO_BUILD_ROOT}/share/railo-runner/" "$PREFIX_PATH"
+  local package_name="$1"
+  echo "Configuring Railo Run CLI..."
+  cp -fR "${RAILO_BUILD_ROOT}/share/railo-runner/${package_name}/" "$PREFIX_PATH"
 }
 
 before_install_package() {
