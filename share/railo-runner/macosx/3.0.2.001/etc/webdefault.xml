@@ -1,0 +1,204 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE web-app PUBLIC "-//Sun Microsystems, Inc.//DTD Web Application 2.3//EN" "http://java.sun.com/dtd/web-app_2_3.dtd">   
+
+<!-- ===================================================================== -->
+<!-- This file contains the default descriptor for web applications.       -->
+<!-- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -->
+<!-- The original of this file is included as a resource in the            -->
+<!-- org.mortbay.jetty.jar file and is loaded by default for all web       -->
+<!-- applications before there own WEB-INF/web.xml file is loaded          -->
+<!--                                                                       -->
+<!-- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -->
+<!-- THE COPY OF THIS FILE in $JETTY_HOME/etc IS NOT USED BY DEFAULT!      -->
+<!-- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -->
+<!-- If the version in $JETTY_HOME/etc/ is to be used, then the            -->
+<!-- setDefaultsDescriptor method must be called on each context,          -->
+<!-- giving the location of the default web.xml file to use.               -->
+<!-- eg of setting the defaultsDescriptor in jetty.xml:
+
+    <Call name="addWebApplication">
+      <Arg>/mycontext</Arg>
+      <Arg><SystemProperty name="jetty.home" default=".">/webapps/mywebapp</Arg>
+      <Set name="defaultsDescriptor"><SystemProperty name="jetty.home" default="."/>/etc/webdefault.xml</Set>
+    </Call>
+                                                                           -->
+<!-- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -->
+
+
+<!-- ===================================================================== -->
+<web-app>
+  <description>
+    Default web.xml file.  
+    This file is applied to a Web application before it's own WEB_INF/web.xml file
+  </description>
+  <filter>
+    <filter-name>UrlRewriteFilter</filter-name>
+    <filter-class>org.tuckey.web.filters.urlrewrite.UrlRewriteFilter</filter-class>
+
+    <init-param>
+        <param-name>confPath</param-name>
+        <param-value>/urlrewrite.xml</param-value>
+    </init-param>
+</filter>
+<filter-mapping>
+    <filter-name>UrlRewriteFilter</filter-name>
+    <url-pattern>/*</url-pattern>
+    <dispatcher>REQUEST</dispatcher>
+    <dispatcher>FORWARD</dispatcher>
+</filter-mapping>
+
+
+  <!-- ==================================================================== -->
+  <!-- Context params to control Session Cookies                            -->
+  <!-- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -  -->
+  <!-- UNCOMMENT TO ACTIVATE
+  <context-param>
+    <param-name>org.mortbay.jetty.servlet.SessionDomain</param-name>
+    <param-value>127.0.0.1</param-value>
+  </context-param>
+
+  <context-param>
+    <param-name>org.mortbay.jetty.servlet.SessionPath</param-name>
+    <param-value>/</param-value>
+  </context-param>
+
+  <context-param>
+    <param-name>org.mortbay.jetty.servlet.MaxAge</param-name>
+    <param-value>-1</param-value>
+  </context-param>
+  -->
+
+<servlet>
+    <servlet-name>default</servlet-name>
+    <servlet-class>org.mortbay.jetty.servlet.DefaultServlet</servlet-class>
+    <init-param>
+      <param-name>acceptRanges</param-name>
+      <param-value>true</param-value>
+    </init-param>
+    <init-param>
+      <param-name>dirAllowed</param-name>
+      <param-value>true</param-value>
+    </init-param>
+    <init-param>
+      <param-name>redirectWelcome</param-name>
+      <param-value>false</param-value>
+    </init-param>
+    <init-param>
+      <param-name>maxCacheSize</param-name>
+      <param-value>2000000</param-value>
+    </init-param>
+    <init-param>
+      <param-name>maxCachedFileSize</param-name>
+      <param-value>254000</param-value>
+    </init-param>
+    <init-param>
+      <param-name>maxCachedFiles</param-name>
+      <param-value>1000</param-value>
+    </init-param>
+    <init-param>
+      <param-name>gzip</param-name>
+      <param-value>false</param-value>
+    </init-param>
+    <init-param>
+      <param-name>useFileMappedBuffer</param-name>
+      <param-value>false</param-value>
+    </init-param>  
+    <init-param>
+      <param-name>aliases</param-name>
+      <param-value>true</param-value>
+    </init-param>  
+    <load-on-startup>0</load-on-startup>
+  </servlet> 
+
+  
+
+  	<servlet>
+		<servlet-name>CFMLServlet</servlet-name>
+		<description>CFML runtime Engine</description>
+		<servlet-class>railo.loader.servlet.CFMLServlet</servlet-class>
+		<init-param>
+			<param-name>railo-web-directory</param-name> 
+			<param-value>{web-root-directory}/WEB-INF/railo/</param-value> 
+			<description>Railo Web Directory directory</description> 
+	    </init-param>	
+		<!-- init-param>
+	      <param-name>railo-server-directory</param-name>
+	      <param-value>./</param-value>
+	      <description>directory where railo root directory is stored</description>
+	    </init-param -->
+		<load-on-startup>1</load-on-startup>
+	</servlet>	
+	
+	<servlet>
+		<servlet-name>AMFServlet</servlet-name>
+		<description>AMF servlet for flash remoting</description>
+		<servlet-class>railo.loader.servlet.AMFServlet</servlet-class>
+		<load-on-startup>2</load-on-startup>
+	</servlet>
+	
+  <servlet-mapping>
+		<servlet-name>CFMLServlet</servlet-name>
+		<url-pattern>*.cfm</url-pattern>
+	</servlet-mapping>
+	<servlet-mapping>
+		<servlet-name>CFMLServlet</servlet-name>
+		<url-pattern>*.cfml</url-pattern>
+	</servlet-mapping>
+	<servlet-mapping>
+		<servlet-name>CFMLServlet</servlet-name>
+		<url-pattern>*.cfc</url-pattern>
+	</servlet-mapping>
+   <servlet-mapping>
+		<servlet-name>CFMLServlet</servlet-name>
+		<url-pattern>*.cfm/*</url-pattern>
+	</servlet-mapping>
+	<servlet-mapping>
+		<servlet-name>CFMLServlet</servlet-name>
+		<url-pattern>*.cfml/*</url-pattern>
+	</servlet-mapping>
+	<servlet-mapping>
+		<servlet-name>CFMLServlet</servlet-name>
+		<url-pattern>*.cfc/*</url-pattern>
+	</servlet-mapping>
+	
+	<servlet-mapping>
+		<servlet-name>AMFServlet</servlet-name>
+		<url-pattern>/flashservices/gateway/*</url-pattern>
+	</servlet-mapping>
+  
+  <!-- ==================================================================== -->
+  <servlet-mapping>
+    <servlet-name>default</servlet-name>
+    <url-pattern>/</url-pattern>
+  </servlet-mapping>
+
+
+
+  <!-- ==================================================================== -->
+  <session-config>
+    <session-timeout>30</session-timeout>
+  </session-config>
+
+  <!-- ==================================================================== -->
+  <!-- Default MIME mappings                                                -->
+  <!-- The default MIME mappings are provided by the mime.properties        -->
+  <!-- resource in the org.mortbay.jetty.jar file.  Additional or modified  -->
+  <!-- mappings may be specified here                                       -->
+  <!-- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -  -->
+  <!-- UNCOMMENT TO ACTIVATE
+  <mime-mapping>
+    <extension>mysuffix</extension>
+    <mime-type>mymime/type</mime-type>
+  </mime-mapping>
+  -->
+
+  <!-- ==================================================================== -->
+  <welcome-file-list>
+	<welcome-file>index.cfm</welcome-file>
+	<welcome-file>index.cfml</welcome-file>
+    <welcome-file>index.html</welcome-file>
+    <welcome-file>index.htm</welcome-file>
+  </welcome-file-list>
+
+</web-app>
+
