@@ -1,4 +1,4 @@
-railoenv
+cfenv
 =====================
 Create a CFML dev environment with Railo in a flash!
 
