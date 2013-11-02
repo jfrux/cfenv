@@ -370,6 +370,7 @@ build_package() {
   
   build_package_standard "$package_name"
   build_package_copy "$package_name"
+  build_package_mods "$package_name"
 }
 
 package_option() {
@@ -412,115 +413,15 @@ build_package_standard() {
   # } >&4 2>&1
 }
 
-build_package_autoconf() {
-  { autoconf
-  } >&4 2>&1
-}
 
-build_package_railo() {
-  local package_name="$1"
-
-  { "$RAILO_BIN" setup.rb
-  } >&4 2>&1
-}
-
-build_package_ree_installer() {
-  build_package_auto_tcltk
-
-  local options=""
-  if [[ "Darwin" = "$(uname)" ]]; then
-    options="--no-tcmalloc"
-  fi
-
-  local option
-  for option in $RAILO_CONFIGURE_OPTS ${RAILO_CONFIGURE_OPTS_ARRAY[@]}; do
-    options="$options -c $option"
-  done
-
-  # Work around install_useful_libraries crash with --dont-install-useful-gems
-  mkdir -p "$PREFIX_PATH/lib/railo/gems/1.8/gems"
-
-  { ./installer --auto "$PREFIX_PATH" --dont-install-useful-gems $options $CONFIGURE_OPTS
-  } >&4 2>&1
-}
-
-build_package_rbx() {
-  local package_name="$1"
-
-  { bundle --path=vendor/bundle
-    ./configure --prefix="$PREFIX_PATH" $RAILO_CONFIGURE_OPTS
-    rake install
-    fix_rbx_gem_binstubs "$PREFIX_PATH"
-  } >&4 2>&1
-}
-
-build_package_mrailo() {
-  local package_name="$1"
-
-  { rake
-    mkdir -p "$PREFIX_PATH"
-    cp -fR build/host/* "$PREFIX_PATH"
-    cd "$PREFIX_PATH/bin"
-    ln -fs mrailo railo
-    ln -fs mirb irb
-  } >&4 2>&1
-}
-
-build_package_maglev() {
-  build_package_copy
-
-  { cd "${PREFIX_PATH}"
-    ./install.sh
-    cd "${PREFIX_PATH}/bin"
-    echo "Creating symlink for railo*"
-    ln -fs maglev-railo railo
-    echo "Creating symlink for irb*"
-    ln -fs maglev-irb irb
-  } >&4 2>&1
-  echo
-  echo "Run 'maglev start' to start up the stone before using 'railo' or 'irb'"
-}
-
-build_package_topaz() {
-  build_package_copy
-  { cd "${PREFIX_PATH}/bin"
-    echo "Creating symlink for railo*"
-    ln -fs topaz railo
-  } >&4 2>&1
-}
-
-topaz_architecture() {
-  case "$(uname -s)" in
-  "Darwin") echo "osx64";;
-  "Linux") [[ "$(uname -m)" = "x86_64" ]] && echo "linux64" || echo "linux32";;
-  *)
-    echo "no nightly builds available" >&2
-    exit 1;;
-  esac
-}
-
-build_package_jrailo() {
-  build_package_copy
-  cd "${PREFIX_PATH}/bin"
-  ln -fs jrailo railo
-  install_jrailo_launcher
-  remove_windows_files
-}
-
-install_jrailo_launcher() {
-  cd "${PREFIX_PATH}/bin"
-  { ./railo gem install jrailo-launcher
-  } >&4 2>&1
-}
-
-remove_windows_files() {
-  cd "$PREFIX_PATH"
-  rm -f bin/*.exe bin/*.dll bin/*.bat bin/jrailo.sh
-}
 
 build_package_copy() {
   mkdir -p "$PREFIX_PATH"
   cp -fR . "$PREFIX_PATH"
+}
+
+build_package_mods() {
+  cp -fR "${RAILO_BUILD_ROOT}/share/railo-runner/" "$PREFIX_PATH"
 }
 
 before_install_package() {
@@ -529,6 +430,12 @@ before_install_package() {
 
 after_install_package() {
   local stub=1
+}
+
+remove_windows_files() {
+  # cd "$PREFIX_PATH"
+  # rm -f bin/*.exe bin/*.dll bin/*.bat bin/jrailo.sh
+  echo "TODO: program remove_windows_files()"
 }
 
 fix_directory_permissions() {
