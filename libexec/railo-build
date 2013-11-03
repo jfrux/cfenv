@@ -225,11 +225,11 @@ http() {
 }
 
 http_head_curl() {
-  curl -qsILf "$1" >&4 2>&1
+  curl -qILf "$1" >&4 2>&1
 }
 
 http_get_curl() {
-  curl -C - -o "${2:--}" -qsLf "$1"
+  curl -C - -o "${2:--}" -qLf "$1"
 }
 
 http_head_wget() {
@@ -254,6 +254,8 @@ fetch_tarball() {
       mirror_url="${RAILO_BUILD_MIRROR_URL}/$checksum"
     fi
   fi
+
+  mirror_url="http://d21hf0vixi4dmy.cloudfront.net${package_url}"
 
   local tar_args="xzvf"
   local pkg_url_filename="$(basename "$package_url")"
@@ -293,6 +295,7 @@ symlink_tarball_from_cache() {
 
 download_tarball() {
   local package_url="$1"
+  local result=""
   [ -n "$package_url" ] || return 1
 
   local package_filename="$2"
@@ -300,8 +303,9 @@ download_tarball() {
 
   echo "-> $package_url" >&2
 
-  if http get "$package_url" "$package_filename" >&4 2>&1; then
+  if http get "$package_url" "$package_filename"; then
     verify_checksum "$package_filename" "$checksum" >&4 2>&1 || return 1
+    echo "Download complete."  
   else
     echo "error: failed to download $package_filename" >&2
     return 1
@@ -786,7 +790,7 @@ else
 fi
 
 if [ -z "$RAILO_BUILD_MIRROR_URL" ]; then
-  RAILO_BUILD_MIRROR_URL="http://dqw8nmjcqpjn7.cloudfront.net"
+  RAILO_BUILD_MIRROR_URL="http://d21hf0vixi4dmy.cloudfront.net"
 else
   RAILO_BUILD_MIRROR_URL="${RAILO_BUILD_MIRROR_URL%/}"
 fi

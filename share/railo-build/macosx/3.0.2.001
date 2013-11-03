@@ -1,1 +1,1 @@
-install_package "3.0.2.001" "http://www.getrailo.org/railo/remote/download/stable/3.0.2.001/railix/unix/railo-3.0.2.001-railo-express-6.1.0-macosx.zip" auto_tcltk standard
+install_package "3.0.2.001" "/railo/remote/download/stable/3.0.2.001/railix/unix/railo-3.0.2.001-railo-express-6.1.0-macosx.zip" auto_tcltk standard

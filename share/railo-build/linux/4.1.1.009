@@ -1,1 +1,1 @@
-install_package "4.1.1.009" "http://www.getrailo.org/railo/remote/download/4.1.1.009/railix/linux/railo-express-4.1.1.009-jre-linux64.tar.gz" auto_tcltk standard
+install_package "4.1.1.009" "/railo/remote/download/4.1.1.009/railix/linux/railo-express-4.1.1.009-jre-linux64.tar.gz" auto_tcltk standard
