@@ -1,0 +1,34 @@
+#!/usr/bin/env bash
+#
+# Summary: Set or show the global CFML version
+#
+# Usage: cfenv global <version>
+#
+# Sets the global CFML version. You can override the global version at
+# any time by setting a directory-specific version with `cfenv local'
+# or by setting the `CFENV_VERSION' environment variable.
+#
+# <version> should be a string matching a CFML version known to cfenv.
+# The special version string `system' will use your default system CFML.
+# Run `cfenv versions' for a list of available CFML versions.
+
+set -e
+[ -n "$CFENV_DEBUG" ] && set -x
+
+# Provide cfenv completions
+if [ "$1" = "--complete" ]; then
+  echo system
+  exec cfenv-versions --bare
+fi
+
+CFENV_VERSION="$1"
+CFENV_VERSION_FILE="${CFENV_ROOT}/version"
+
+if [ -n "$CFENV_VERSION" ]; then
+  cfenv-version-file-write "$CFENV_VERSION_FILE" "$CFENV_VERSION"
+else
+  cfenv-version-file-read "$CFENV_VERSION_FILE" ||
+  cfenv-version-file-read "${CFENV_ROOT}/global" ||
+  cfenv-version-file-read "${CFENV_ROOT}/default" ||
+  echo system
+fi

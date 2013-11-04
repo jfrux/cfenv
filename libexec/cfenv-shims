@@ -1,0 +1,22 @@
+#!/usr/bin/env bash
+# Summary: List existing cfenv shims
+# Usage: cfenv shims [--short]
+
+set -e
+[ -n "$CFENV_DEBUG" ] && set -x
+
+# Provide cfenv completions
+if [ "$1" = "--complete" ]; then
+  echo --short
+  exit
+fi
+
+shopt -s nullglob
+
+for command in "${CFENV_ROOT}/shims/"*; do
+  if [ "$1" = "--short" ]; then
+    echo "${command##*/}"
+  else
+    echo "$command"
+  fi
+done | sort

@@ -1,0 +1,83 @@
+#!/usr/bin/env bash
+#
+# Summary: Run an executable with the selected CFML version
+#
+# Usage: cfenv exec <command> [args...]
+#
+# Runs an executable contained by the currently selected CFML's bin
+# directory. Rough equivalent of:
+#
+#   exec "$(cfenv prefix)/bin/$command" args...
+
+set -e
+[ -n "$CFENV_DEBUG" ] && set -x
+
+railopath=""
+# Provide cfenv completions
+while true; do
+  case "$1" in
+  "--complete" )
+    exec cfenv shims --short
+    ;;
+  "--railopath" )
+    railopath=1
+    shift 1
+    ;;
+  * )
+    break
+    ;;
+  esac
+done
+
+# Replace any "CFENV_ROOT/shims" or "CFENV_ROOT/versions/*/bin" paths in the
+# list with the given path. If no replacements were made, prepend the path onto
+# the list.
+replace_shims_path() {
+  local path="$1"
+  local dir="$2"
+  # fake directory that serves as a placeholder for shims location in RUBYPATH:
+  local placeholder="/cfenv_shims_were_here"
+  local found=""
+  local result=""
+  local -a paths
+  IFS=: paths=($path)
+
+  for path in "${paths[@]}"; do
+    if [[ $path = "${CFENV_ROOT}/shims" || $path == "${CFENV_ROOT}/versions/"*/bin || $path = $placeholder ]]; then
+      found=1
+      result="${result}${dir:-$placeholder}:"
+    else
+      result="${result}${path}:"
+    fi
+  done
+
+  # if no cfenv paths were replaced, simply prepend the path
+  [ -n "$found" -o -z "$dir" ] || result="${dir}:${path}"
+  echo "${result%:}"
+}
+
+CFENV_VERSION="$(cfenv-version-name)"
+CFENV_COMMAND="$1"
+
+if [ -z "$CFENV_COMMAND" ]; then
+  cfenv-help --usage exec >&2
+  exit 1
+fi
+
+export CFENV_VERSION
+CFENV_COMMAND_PATH="$(cfenv-which "$CFENV_COMMAND")"
+
+OLDIFS="$IFS"
+IFS=$'\n' scripts=(`cfenv-hooks exec`)
+IFS="$OLDIFS"
+for script in "${scripts[@]}"; do
+  source "$script"
+done
+
+shift 1
+if [ -n "$railopath" ]; then
+  bindir=""
+  [ "$CFENV_VERSION" != "system" ] && bindir="${CFENV_COMMAND_PATH%/*}"
+  export RUBYPATH="$(replace_shims_path "${RUBYPATH:-$PATH}" "$bindir")"
+fi
+exec -a "$CFENV_COMMAND" "$CFENV_COMMAND_PATH" "$@"

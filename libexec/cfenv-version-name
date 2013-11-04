@@ -1,0 +1,31 @@
+#!/usr/bin/env bash
+# Summary: Show the current CFML version
+set -e
+[ -n "$CFENV_DEBUG" ] && set -x
+
+if [ -z "$CFENV_VERSION" ]; then
+  CFENV_VERSION_FILE="$(cfenv-version-file)"
+  CFENV_VERSION="$(cfenv-version-file-read "$CFENV_VERSION_FILE" || true)"
+fi
+
+if [ -z "$CFENV_VERSION" ] || [ "$CFENV_VERSION" = "system" ]; then
+  echo "system"
+  exit
+fi
+
+version_exists() {
+  local version="$1"
+  [ -d "${CFENV_ROOT}/versions/${version}" ]
+}
+
+if version_exists "$CFENV_VERSION"; then
+  echo "$CFENV_VERSION"
+elif version_exists "${CFENV_VERSION#railo-}"; then
+  { echo "warning: ignoring extraneous \`railo-' prefix in version \`${CFENV_VERSION}'"
+    echo "         (set by $(cfenv-version-origin))"
+  } >&2
+  echo "${CFENV_VERSION#railo-}"
+else
+  echo "cfenv: version \`$CFENV_VERSION' is not installed" >&2
+  exit 1
+fi
