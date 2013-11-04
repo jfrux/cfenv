@@ -1,0 +1,17 @@
+#!/usr/bin/env bash
+# Usage: cfenv completions <command> [arg1 arg2...]
+
+set -e
+[ -n "$CFENV_DEBUG" ] && set -x
+
+COMMAND="$1"
+if [ -z "$COMMAND" ]; then
+  cfenv-help --usage completions >&2
+  exit 1
+fi
+
+COMMAND_PATH="$(command -v "cfenv-$COMMAND" || command -v "cfenv-sh-$COMMAND")"
+if grep -i "^\([#%]\|--\|//\) provide cfenv completions" "$COMMAND_PATH" >/dev/null; then
+  shift
+  exec "$COMMAND_PATH" --complete "$@"
+fi

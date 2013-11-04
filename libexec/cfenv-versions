@@ -1,0 +1,39 @@
+#!/usr/bin/env bash
+# Summary: List all CFML versions available to cfenv
+# Usage: cfenv versions [--bare]
+#
+# Lists all CFML versions found in `$CFENV_ROOT/versions/*'.
+
+set -e
+[ -n "$CFENV_DEBUG" ] && set -x
+
+if [ "$1" = "--bare" ]; then
+  hit_prefix=""
+  miss_prefix=""
+  current_version=""
+  include_system=""
+else
+  hit_prefix="* "
+  miss_prefix="  "
+  current_version="$(cfenv-version-name || true)"
+  include_system="1"
+fi
+
+print_version() {
+  if [ "$1" == "$current_version" ]; then
+    echo "${hit_prefix}$(cfenv-version 2>/dev/null)"
+  else
+    echo "${miss_prefix}$1"
+  fi
+}
+
+# Include "system" in the non-bare output, if it exists
+if [ -n "$include_system" ] && CFENV_VERSION=system cfenv-which railo >/dev/null 2>&1; then
+  print_version system
+fi
+
+for path in "${CFENV_ROOT}/versions/"*; do
+  if [ -d "$path" ]; then
+    print_version "${path##*/}"
+  fi
+done

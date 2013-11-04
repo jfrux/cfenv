@@ -1,0 +1,55 @@
+#!/usr/bin/env bash
+#
+# Summary: Set or show the local application-specific CFML version
+#
+# Usage: cfenv local <version>
+#        cfenv local --unset
+#
+# Sets the local application-specific CFML version by writing the
+# version name to a file named `.railo-version'.
+#
+# When you run a CFML command, cfenv will look for a `.railo-version'
+# file in the current directory and each parent directory. If no such
+# file is found in the tree, cfenv will use the global CFML version
+# specified with `cfenv global'. A version specified with the
+# `CFENV_VERSION' environment variable takes precedence over local
+# and global versions.
+#
+# For backwards compatibility, cfenv will also read version
+# specifications from `.cfenv-version' files, but a `.railo-version'
+# file in the same directory takes precedence.
+#
+# <version> should be a string matching a CFML version known to cfenv.
+# The special version string `system' will use your default system CFML.
+# Run `cfenv versions' for a list of available CFML versions.
+
+set -e
+[ -n "$CFENV_DEBUG" ] && set -x
+
+# Provide cfenv completions
+if [ "$1" = "--complete" ]; then
+  echo --unset
+  echo system
+  exec cfenv-versions --bare
+fi
+
+CFENV_VERSION="$1"
+
+if [ "$CFENV_VERSION" = "--unset" ]; then
+  rm -f .railo-version .cfenv-version
+elif [ -n "$CFENV_VERSION" ]; then
+  previous_file="$(CFENV_VERSION= cfenv-version-origin || true)"
+  cfenv-version-file-write .railo-version "$CFENV_VERSION"
+  if [ "$previous_file" -ef .cfenv-version ]; then
+    rm -f .cfenv-version
+    { echo "cfenv: removed existing \`.cfenv-version' file and migrated"
+      echo "       local version specification to \`.railo-version' file"
+    } >&2
+  fi
+else
+  cfenv-version-file-read .railo-version ||
+  cfenv-version-file-read .cfenv-version ||
+  { echo "cfenv: no local version configured for this directory"
+    exit 1
+  } >&2
+fi
