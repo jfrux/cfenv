@@ -1,6 +1,6 @@
 #!/usr/bin/env bash
 
-RAILO_BUILD_VERSION="20131030"
+RAILO_BUILD_VERSION="20131106"
 
 set -E
 exec 3<&2 # preserve original stderr at fd 3
