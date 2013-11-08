@@ -1,10 +1,7 @@
 # Groom your app’s CFML dev environment with cfenv.
 
-Use cfenv to pick a Railo version for your application and guarantee 
+Use cfenv to pick a Railo version for your application and ensure 
 that your development environment matches production.
-
-**Configuration free.** Run our simple installer from ANY computer, and 
-you'll be developing a new CFML application within roughly a minute.
 
 **Truly empowering.** Specify your app's Railo version once, in a single file. 
 Keep all your teammates on the same page. No headaches running apps on different versions of Railo. 
