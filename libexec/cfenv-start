@@ -1,0 +1,50 @@
+#!/usr/bin/env bash
+#
+# Summary: Start a railo context in the current directory.
+#
+# Usage: cfenv start [-p|--port]
+#
+#   -p/--port        Set the port the Railo Context will load on.
+#
+#
+set -e
+[ -n "$CFENV_DEBUG" ] && set -x
+
+platform='unknown'
+unamestr=`uname`
+railo_port=8888
+parse_options() {
+    OPTIONS=()
+    ARGUMENTS=()
+    local arg option index
+
+    for arg in "$@"; do
+      if [ "${arg:0:1}" = "-" ]; then
+        if [ "${arg:1:1}" = "-" ]; then
+          OPTIONS[${#OPTIONS[*]}]="${arg:2}"
+        else
+          index=1
+          while option="${arg:$index:1}"; do
+            [ -n "$option" ] || break
+            OPTIONS[${#OPTIONS[*]}]="$option"
+            index=$(($index+1))
+          done
+        fi
+      else
+        ARGUMENTS[${#ARGUMENTS[*]}]="$arg"
+      fi
+    done
+}
+
+parse_options "$@"
+for option in "${OPTIONS[@]}"; do
+
+  case "$option" in
+  "p" | "port" )
+    railo_port=${ARGUMENTS[$option]}
+    echo "Using port ${railo_port}"
+    ;;
+  esac
+done
+export CFENV_PORT=$railo_port
+exec railo_init
