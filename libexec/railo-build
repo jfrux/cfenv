@@ -1,7 +1,6 @@
 #!/usr/bin/env bash
 
-RAILO_BUILD_VERSION="20131030"
-
+RAILO_BUILD_VERSION="20131106"
 set -E
 exec 3<&2 # preserve original stderr at fd 3
 
@@ -213,7 +212,6 @@ http() {
   local url="$2"
   local file="$3"
   [ -n "$url" ] || return 1
-
   if type curl &>/dev/null; then
     "http_${method}_curl" "$url" "$file"
   elif type wget &>/dev/null; then
@@ -237,7 +235,7 @@ http_head_wget() {
 }
 
 http_get_wget() {
-  wget -nv -c -O "${2:--}" "$1"
+  wget --output-document "${2:--}" "$1"
 }
 
 fetch_tarball() {
@@ -255,23 +253,28 @@ fetch_tarball() {
     fi
   fi
 
-  mirror_url="http://d21hf0vixi4dmy.cloudfront.net${package_url}"
-
+  #mirror_url="http://d21hf0vixi4dmy.cloudfront.net${package_url}"
+  mirror_url="http://getrailo.org${package_url}"
   local tar_args="xzvf"
   local pkg_url_filename="$(basename "$package_url")"
   local pkg_url_extension="${pkg_url_filename##*.}"
   local pkg_url_basefilename="${pkg_url_filename%.*}"
+  
+  if [ "${pkg_url_extension}" == "gz" ]; then
+    pkg_url_extension="tar.gz"
+    pkg_url_basefilename="${pkg_url_basefilename%.*}"
+  fi
+
   local package_filename="${pkg_url_basefilename}.${pkg_url_extension}"
-
-
+  
   if ! symlink_tarball_from_cache "$package_filename" "$checksum"; then
     echo "Downloading Railo v${package_name}..." >&2
     http head "$mirror_url" &&
     download_tarball "$mirror_url" "$package_filename" "$checksum" ||
     download_tarball "$package_url" "$package_filename" "$checksum"
   fi
-
-  { if tar $tar_args "$package_filename" && mv "./${pkg_url_basefilename}/" "./${package_name}"; then
+  
+{ if tar $tar_args "$package_filename" && mv "./${pkg_url_basefilename}/" "./${package_name}"; then
       if [ -z "$KEEP_BUILD_PATH" ]; then
         rm -f "$package_filename"
       else
@@ -428,7 +431,8 @@ build_package_copy() {
 build_package_mods() {
   local package_name="$1"
   echo "Configuring Railo Run CLI..."
-  cp -fR "${RAILO_BUILD_ROOT}/share/railo-runner/${platform}/${package_name}/" "$PREFIX_PATH"
+  cd "${RAILO_BUILD_ROOT}/share/railo-runner/${platform}/${package_name}/"
+  cp -fR . "$PREFIX_PATH"
 }
 
 before_install_package() {
