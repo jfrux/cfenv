@@ -1,4 +1,4 @@
 #!/bin/bash
 CURRPATH=$(pwd)
 cd $(dirname $0)
-java -DSTOP.PORT=8887 -DSTOP.KEY=railo -Drespath=$CURRPATH -jar -Xms256M -Xmx512M ../lib/start.jar
+java -Djetty.port=$CFENV_PORT -DSTOP.PORT=8887 -DSTOP.KEY=railo -Drespath=$CURRPATH -jar -Xms256M -Xmx512M ../lib/start.jar
