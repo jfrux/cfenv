@@ -13,6 +13,12 @@ elif [[ "$unamestr" == 'Darwin' ]]; then
    platform='macosx'
 fi
 
+if [[ "$uname -m" == 'x86_64' ]]; then
+  is_x64=true
+else
+  is_x64=false
+fi
+
 lib() {
   parse_options() {
     OPTIONS=()
@@ -255,6 +261,18 @@ fetch_tarball() {
 
   #mirror_url="http://d21hf0vixi4dmy.cloudfront.net${package_url}"
   mirror_url="http://getrailo.org${package_url}"
+
+  if [ "$platform" == "linux" ]; then
+    echo "is linux"
+    if [ !$is_x64 ]; then
+      echo "is not x64"
+      mirror_url=${mirror_url//linux64/linux32}
+      package_url=${package_url//linux64/linux32}
+    fi
+  fi
+
+  echo $mirror_url
+
   local tar_args="xzvf"
   local pkg_url_filename="$(basename "$package_url")"
   local pkg_url_extension="${pkg_url_filename##*.}"
