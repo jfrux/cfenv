@@ -267,6 +267,7 @@ fetch_tarball() {
     if [ !$is_x64 ]; then
       echo "is not x64"
       mirror_url=${mirror_url//linux64/linux32}
+      package_url=${package_url//linux64/linux32}
     fi
   fi
 
