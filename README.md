@@ -25,6 +25,7 @@ Just Works™ from the command line. Override the Railo version anytime: just se
 * [Command Reference](#command-reference)
   * [cfenv local](#cfenv-local)
   * [cfenv global](#cfenv-global)
+  * [cfenv server](#cfenv-server)
   * [cfenv shell](#cfenv-shell)
   * [cfenv versions](#cfenv-versions)
   * [cfenv version](#cfenv-version)
@@ -189,6 +190,23 @@ You can also remove old Railo versions by `rm -rf` the directory of the
 version you want to remove. You can find the directory of a particular
 Railo version with the `cfenv prefix` command, e.g. `cfenv prefix
 4.1.1.009`.
+
+### Starting a Railo Context
+
+Once you have an installed version of Railo and have set it globally or locally for a project.
+You can start the web server for your project with the `cfenv start` command.
+
+~~~ sh
+# start a railo web server in the current directory
+$ cfenv start
+~~~
+
+You can also specify a custom port if the default `8888` just won't due.
+
+~~~ sh
+# define a custom port for the web server
+$ cfenv start -p 3000
+~~~
 
 ## How It Works
 
