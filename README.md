@@ -25,7 +25,7 @@ Just Works™ from the command line. Override the Railo version anytime: just se
 * [Command Reference](#command-reference)
   * [cfenv local](#cfenv-local)
   * [cfenv global](#cfenv-global)
-  * [cfenv server](#cfenv-server)
+  * [cfenv start](#cfenv-start)
   * [cfenv shell](#cfenv-shell)
   * [cfenv versions](#cfenv-versions)
   * [cfenv version](#cfenv-version)
