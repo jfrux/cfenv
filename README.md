@@ -326,6 +326,16 @@ setting the `CFENV_VERSION` environment variable.
 When run without a version number, `cfenv global` reports the
 currently configured global version.
 
+### cfenv start
+
+Starts a railo web server context within the current directory.
+
+    $ cfenv start
+
+Also, you can specify the port the server will run on if the default `8888` just won't do.
+
+    $ cfenv start --port 3000
+
 ### cfenv shell
 
 Sets a shell-specific Railo version by setting the `CFENV_VERSION`
